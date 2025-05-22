@@ -1,7 +1,7 @@
 resource "aws_instance" "server" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
-  key_name      = aws_key_pair.example.key_name
+  key_name      = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.webSg.id]
   subnet_id              = aws_subnet.sub1.id
 
@@ -12,8 +12,9 @@ resource "aws_instance" "server" {
               pip3 install flask
               cd /home/ec2-user
               git clone https://github.com/massey-dan/flask-dynamic-string-service.git
-              cd dynamic-string-service/app
-              FLASK_APP=app.py nohup flask run --host=0.0.0.0 --port=5000 &
+              cd flask-dynamic-string-service/Application
+              FLASK_APP=app.py
+              flask run --host=0.0.0.0 --port=5000 &
               EOF
 
 }

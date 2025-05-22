@@ -5,14 +5,8 @@
 \usepackage{color}
 \usepackage{hyperref}
 \usepackage{titlesec}
-\usepackage{fancyhdr}
 \usepackage{parskip}
 
-\pagestyle{fancy}
-\fancyhf{}
-\rhead{Cloud Dynamic Page}
-\lhead{Python Flask + IaC}
-\rfoot{\thepage}
 
 \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
@@ -25,92 +19,61 @@
   breaklines=true
 }
 
-\title{Dynamic HTML Page on the Cloud using Flask and Infrastructure as Code}
-\author{Your Name}
-\date{\today}
+\title{Dynamic String in a HTML page}
+\author{Dan Massey}
 
 \begin{document}
 
 \maketitle
 
 \section{Overview}
-This document outlines the architecture and implementation of a lightweight Flask application deployed on a cloud platform using Infrastructure as Code (IaC). The service dynamically displays a string on an HTML page and allows it to be updated without redeploying the application.
+I built a Flask application and deployed it to AWS EC2 with Terraform. 
+The application serves a HTML document with the string, and has an endpoint open to update it. 
 
 \section{Solution Summary}
 \subsection*{Technology Stack}
 \begin{itemize}
     \item \textbf{Backend:} Python Flask
-    \item \textbf{Cloud Platform:} AWS / Azure / GCP (choose one)
-    \item \textbf{IaC:} Terraform / AWS CloudFormation / Azure Bicep (choose one)
-    \item \textbf{Hosting:} EC2 / App Service / GCP Compute Engine
+    \item \textbf{Cloud Platform:} AWS 
+    \item \textbf{IaC:} Terraform
+    \item \textbf{Hosting:} EC2
 \end{itemize}
 
 \subsection*{How It Works}
 \begin{enumerate}
-    \item Flask app serves a dynamic HTML page with content from a file or memory.
+    \item Flask app serves a dynamic HTML page with a string loaded from memory
     \item A REST endpoint \texttt{/update} accepts JSON payloads to update the string.
-    \item The app is deployed using IaC to provision resources reproducibly.
 \end{enumerate}
-
-\section{Code Snippets}
-\subsection*{Flask Route}
-\begin{lstlisting}[language=Python]
-@app.route("/")
-def home():
-    with open("message.txt", "r") as f:
-        return f"<h1>The saved string is {f.read().strip()}</h1>"
-
-@app.route("/update", methods=["POST"])
-def update():
-    data = request.get_json()
-    new_string = data.get("dynamic_string")
-    with open("message.txt", "w") as f:
-        f.write(new_string)
-    return jsonify({"message": "String updated"})
-\end{lstlisting}
-
-\subsection*{Terraform Example (AWS EC2)}
-\begin{lstlisting}
-resource "aws_instance" "flask_app" {
-  ami           = "ami-xxxxxx"
-  instance_type = "t2.micro"
-  ...
-  user_data     = <<-EOF
-    #!/bin/bash
-    sudo apt update
-    sudo apt install -y python3-pip
-    pip3 install flask
-    python3 /home/ubuntu/app.py &
-  EOF
-}
-\end{lstlisting}
 
 \section{Design Decisions}
 \subsection*{Why Flask?}
-Flask offers a simple, lightweight framework ideal for rapid prototyping and small services.
+Flask is a very simple and lightweight framework which made it ideal for a small service like this. 
 
-\subsection*{Why IaC?}
-Infrastructure as Code ensures repeatability, versioning, and easier management of cloud resources.
+\subsection*{Why Terraform/AWS}
+There may have been more lightweight and easier solutions but I chose Terraform and AWS as they were mentioned in the job specification. 
 
-\subsection*{String Storage}
-The string is stored in a plain text file on disk. This method is simple, persistent across requests, and sufficient for single-instance deployments.
+\section{Useage}
+Open the page at \texttt{http://18.170.218.128:5000/} to view the string. 
+
+To update the string, send a \texttt{POST} request to \texttt{http://18.170.218.128:5000/update} with the body:
+\begin{lstlisting}
+{
+    "dynamic_string": "I've updated the string!"
+}
+\end{lstlisting}
+
+Note: I may have stopped the instance.
 
 \section{Trade-offs and Alternatives}
 \begin{itemize}
-    \item \textbf{Alternative Storage:} Redis, DynamoDB, or environment variables.
-    \item \textbf{Scaling:} Current setup is single-instance. For horizontal scaling, centralized storage or a distributed cache is needed.
-    \item \textbf{Security:} Currently, no authentication on \texttt{/update} route. Production systems should secure this endpoint.
+    \item \textbf{Alternative Storage:} It would have been possible to persist the storage of the string to a DB or file, but this would have meant added complexity and was beyond the scope of the task. However this could have allowed for better scalling as it would have made it possible to be multi-instance.
+    \item \textbf{Security:} Currently, there is no authentication on \texttt{/update} route. It would be better to secure this and have some form of validation on what the string was being set to. 
 \end{itemize}
 
 \section{Future Improvements}
 \begin{itemize}
     \item Add authentication to the update endpoint.
     \item Store the dynamic string in a database.
-    \item Deploy behind a load balancer with autoscaling.
-    \item Use Docker for containerized deployments.
 \end{itemize}
-
-\section{Conclusion}
-This project demonstrates a basic dynamic web service using Python Flask, deployed on the cloud with Infrastructure as Code. It balances simplicity and functionality, and provides a foundation for building scalable, cloud-native applications.
 
 \end{document}

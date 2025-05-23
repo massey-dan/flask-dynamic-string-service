@@ -34,9 +34,8 @@ The application serves a HTML document with the string, and has an endpoint open
 \subsection*{Technology Stack}
 \begin{itemize}
     \item \textbf{Backend:} Python Flask
-    \item \textbf{Cloud Platform:} AWS 
+    \item \textbf{Cloud Platform:} AWS (EC2)
     \item \textbf{IaC:} Terraform
-    \item \textbf{Hosting:} EC2
 \end{itemize}
 
 \subsection*{How It Works}
@@ -50,7 +49,7 @@ The application serves a HTML document with the string, and has an endpoint open
 Flask is a very simple and lightweight framework which made it ideal for a small service like this. 
 
 \subsection*{Why Terraform/AWS}
-There may have been more lightweight and easier solutions but I chose Terraform and AWS as they were mentioned in the job specification. 
+There would have been more lightweight and easier solutions but I chose Terraform and AWS as they were mentioned in the job specification, and I have some experience in both.
 
 \section{Useage}
 Open the page at \texttt{http://18.170.218.128:5000/} to view the string. 
@@ -62,11 +61,11 @@ To update the string, send a \texttt{POST} request to \texttt{http://18.170.218.
 }
 \end{lstlisting}
 
-Note: I may have stopped the instance.
+Note: I may have stopped the EC2 instance.
 
 \section{Trade-offs and Alternatives}
 \begin{itemize}
-    \item \textbf{Alternative Storage:} It would have been possible to persist the storage of the string to a DB or file, but this would have meant added complexity and was beyond the scope of the task. However this could have allowed for better scalling as it would have made it possible to be multi-instance.
+    \item \textbf{Alternative Storage:} It would have been possible to persist the storage of the string to a DB or file, but this would have meant added complexity and was beyond the scope of the task. However this could have allowed for better scalling as it would have made it possible to be multi-instanced.
     \item \textbf{Security:} Currently, there is no authentication on \texttt{/update} route. It would be better to secure this and have some form of validation on what the string was being set to. 
 \end{itemize}
 
@@ -74,6 +73,7 @@ Note: I may have stopped the instance.
 \begin{itemize}
     \item Add authentication to the update endpoint.
     \item Store the dynamic string in a database.
+    \item Add some validation on the string. 
 \end{itemize}
 
 \end{document}

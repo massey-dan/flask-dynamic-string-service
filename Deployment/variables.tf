@@ -21,6 +21,6 @@ variable "vpc-cidr" {
 }
 
 variable "subnet_az" {
-    description = "Value for Availabilty zone of subnet"
+    description = "Value for Availability zone of subnet"
 }
 

@@ -1,0 +1,6 @@
+ami_id = "replaceme"
+instance_type = "replaceme"
+key_name = "replaceme"
+sg-name = "replaceme"
+subnet_az = "replaceme"
+vpc-cidr = "replaceme"

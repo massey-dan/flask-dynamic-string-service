@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-dynamic_string = "The saved string is dynamic string"
+dynamic_string = "This is a dynamic string"
 
 @app.route('/')
 def index():
@@ -13,6 +13,6 @@ def update_dynamic_string():
     global dynamic_string
     data = request.get_json()
     if not data or 'dynamic_string' not in data:
-        return jsonify({'error': 'Missing dynamic_string'}), 400
+        return jsonify({'error': 'dynamic_string is a required field'}), 400
     dynamic_string = data['dynamic_string']
     return jsonify({'dynamic_string': dynamic_string})
